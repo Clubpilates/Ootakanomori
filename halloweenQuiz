@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ハロウィン課題発見クイズ 🎃</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #1e1e2f; color: #fff; text-align: center; padding: 20px; }
+    h1 { color: #ff9800; }
+    .quiz-box { background: #2e2e4f; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); max-width: 600px; margin: auto; }
+    button { margin: 8px; padding: 10px 20px; border: none; border-radius: 8px; background: #ff5722; color: #fff; font-size: 16px; cursor: pointer; }
+    button:hover { background: #e64a19; }
+    .hidden { display: none; }
+    .coupon { font-size: 20px; color: #ffeb3b; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>🎃 ハロウィン課題発見クイズ 👻</h1>
+  <div class="quiz-box">
+    <p id="question"></p>
+    <div id="choices"></div>
+    <p id="feedback"></p>
+    <button id="next-btn" class="hidden">次の問題へ</button>
+    <div id="result" class="hidden"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "骨盤が前傾するときに、最も主動的に働く筋肉はどれ？",
+        choices: ["大殿筋", "腸腰筋", "ハムストリングス", "腹直筋"],
+        answer: "腸腰筋"
+      },
+      {
+        question: "ニュートラルポジションで正しい腰椎の説明はどれ？",
+        choices: ["腰椎は完全に床に押し付ける", "腰椎は床から少し浮いている", "胸椎は床から離れる", "頸椎の湾曲は消える"],
+        answer: "腰椎は床から少し浮いている"
+      },
+      {
+        question: "骨盤底筋群を活性化させるcueとして適切なのは？",
+        choices: ["お尻を強く締める", "息を吸ってお腹をふくらませる", "尿を途中で止めるイメージ", "肩を下げて胸を張る"],
+        answer: "尿を途中で止めるイメージ"
+      },
+      {
+        question: "中殿筋が弱化すると歩行時に起こりやすい現象は？",
+        choices: ["トレンデレンブルグ歩行", "ドロップフット", "ランバールロードシス", "ペルビックティルト"],
+        answer: "トレンデレンブルグ歩行"
+      },
+      {
+        question: "ピラティスのロールアップで最も働きかけたい深層筋は？",
+        choices: ["外腹斜筋", "腹横筋", "大腰筋", "脊柱起立筋"],
+        answer: "腹横筋"
+      }
+    ];
+
+    let currentQuiz = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const choicesEl = document.getElementById("choices");
+    const feedbackEl = document.getElementById("feedback");
+    const nextBtn = document.getElementById("next-btn");
+    const resultEl = document.getElementById("result");
+
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function loadQuiz() {
+      feedbackEl.textContent = "";
+      nextBtn.classList.add("hidden");
+      const currentData = quizData[currentQuiz];
+      questionEl.textContent = `Q${currentQuiz + 1}. ${currentData.question}`;
+
+      // 選択肢をランダムに並べ替え
+      const shuffledChoices = shuffle([...currentData.choices]);
+
+      choicesEl.innerHTML = "";
+      shuffledChoices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.textContent = choice;
+        btn.onclick = () => selectAnswer(choice, currentData.answer);
+        choicesEl.appendChild(btn);
+      });
+    }
+
+    function selectAnswer(selected, correct) {
+      if (selected === correct) {
+        feedbackEl.textContent = "✅ 正解！";
+        score++;
+      } else {
+        feedbackEl.textContent = `❌ 不正解！正解は「${correct}」です。`;
+      }
+      nextBtn.classList.remove("hidden");
+      Array.from(choicesEl.children).forEach(btn => btn.disabled = true);
+    }
+
+    nextBtn.onclick = () => {
+      currentQuiz++;
+      if (currentQuiz < quizData.length) {
+        loadQuiz();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      questionEl.textContent = "クイズ終了！";
+      choicesEl.innerHTML = "";
+      feedbackEl.textContent = "";
+      nextBtn.classList.add("hidden");
+      if (score === quizData.length) {
+        resultEl.innerHTML = "🎉 全問正解おめでとう！<br><span class='coupon'>店内商品500円OFFクーポン</span>をゲット！";
+      } else {
+        resultEl.textContent = `あなたの得点: ${score}/${quizData.length}問 正解`;
+      }
+      resultEl.classList.remove("hidden");
+    }
+
+    loadQuiz();
+  </script>
+</body>
+</html>
