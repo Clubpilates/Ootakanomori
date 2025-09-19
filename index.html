@@ -7,11 +7,12 @@
   <style>
     body { font-family: Arial, sans-serif; background-color: #1e1e2f; color: #fff; text-align: center; padding: 20px; }
     h1 { color: #ff9800; }
-    .quiz-box { background: #2e2e4f; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); max-width: 600px; margin: auto; }
+    .quiz-box { background: #2e2e4f; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); max-width: 700px; margin: auto; }
     button { margin: 8px; padding: 10px 20px; border: none; border-radius: 8px; background: #ff5722; color: #fff; font-size: 16px; cursor: pointer; }
     button:hover { background: #e64a19; }
     .hidden { display: none; }
     .coupon { font-size: 20px; color: #ffeb3b; margin-top: 20px; }
+    img { max-width: 100%; margin-top: 10px; border-radius: 8px; }
   </style>
 </head>
 <body>
@@ -20,6 +21,7 @@
     <p id="question"></p>
     <div id="choices"></div>
     <p id="feedback"></p>
+    <div id="explanation"></div>
     <button id="next-btn" class="hidden">次の問題へ</button>
     <div id="result" class="hidden"></div>
   </div>
@@ -27,29 +29,34 @@
   <script>
     const quizData = [
       {
-        question: "骨盤が前傾するときに、最も主動的に働く筋肉はどれ？",
-        choices: ["大殿筋", "腸腰筋", "ハムストリングス", "腹直筋"],
-        answer: "腸腰筋"
+        question: "足首のポイントとは？",
+        choices: ["足の甲を上げる動き", "足の指で指すように伸ばす動き", "かかとを押し出す動き", "足首を回す動き"],
+        answer: "足の指で指すように伸ばす動き",
+        explanation: "ポイントは「足の指でポインターのように指すからポイント」と覚える！その反対がフレックスです。"
       },
       {
-        question: "ニュートラルポジションで正しい腰椎の説明はどれ？",
-        choices: ["腰椎は完全に床に押し付ける", "腰椎は床から少し浮いている", "胸椎は床から離れる", "頸椎の湾曲は消える"],
-        answer: "腰椎は床から少し浮いている"
+        question: "背骨は全部で何個ある？",
+        choices: ["22個", "24個", "26個", "30個"],
+        answer: "24個",
+        explanation: "頸椎7個、胸椎12個、腰椎5個の合計24個。<br>ピラティスで扱うインナーマッスルは骨に近い筋肉のため、骨を動かすイメージが持てると体性感覚が向上します！"
       },
       {
-        question: "骨盤底筋群を活性化させるcueとして適切なのは？",
-        choices: ["お尻を強く締める", "息を吸ってお腹をふくらませる", "尿を途中で止めるイメージ", "肩を下げて胸を張る"],
-        answer: "尿を途中で止めるイメージ"
+        question: "仰向け状態で、骨盤インプリントの説明として正しいものはどれ？",
+        choices: ["腰椎を床に押し付ける", "腰椎を浮かせる", "骨盤を前に傾ける", "骨盤を左右にひねる"],
+        answer: "腰椎を床に押し付ける",
+        explanation: "骨盤の前傾後傾をスムーズに行えるようになると、ピラティス上級者感が出ます！"
       },
       {
-        question: "中殿筋が弱化すると歩行時に起こりやすい現象は？",
-        choices: ["トレンデレンブルグ歩行", "ドロップフット", "ランバールロードシス", "ペルビックティルト"],
-        answer: "トレンデレンブルグ歩行"
+        question: "肩甲骨の挙上（きょじょう）とは？",
+        choices: ["肩甲骨を下げる動き", "肩甲骨を上に持ち上げる動き", "肩甲骨を内側に寄せる動き", "肩甲骨を外側に広げる動き"],
+        answer: "肩甲骨を上に持ち上げる動き",
+        explanation: "肩甲骨は6つの動きがあります。挙上、下制、内転、外転、上方回旋、下方回旋。詳しくはニュースレターをCHECK!"
       },
       {
-        question: "ピラティスのロールアップで最も働きかけたい深層筋は？",
-        choices: ["外腹斜筋", "腹横筋", "大腰筋", "脊柱起立筋"],
-        answer: "腹横筋"
+        question: "骨盤の骨の画像を見て、「腸骨」はどれ？",
+        choices: ["仙骨", "腸骨", "坐骨", "恥骨"],
+        answer: "腸骨",
+        explanation: "骨盤の画像で仙骨、腸骨、坐骨、尾骨、恥骨の位置を解説。<br><img src='pelvis.png' alt='骨盤の画像'>"
       }
     ];
 
@@ -59,6 +66,7 @@
     const questionEl = document.getElementById("question");
     const choicesEl = document.getElementById("choices");
     const feedbackEl = document.getElementById("feedback");
+    const explanationEl = document.getElementById("explanation");
     const nextBtn = document.getElementById("next-btn");
     const resultEl = document.getElementById("result");
 
@@ -68,6 +76,7 @@
 
     function loadQuiz() {
       feedbackEl.textContent = "";
+      explanationEl.innerHTML = "";
       nextBtn.classList.add("hidden");
       const currentData = quizData[currentQuiz];
       questionEl.textContent = `Q${currentQuiz + 1}. ${currentData.question}`;
@@ -79,18 +88,19 @@
       shuffledChoices.forEach(choice => {
         const btn = document.createElement("button");
         btn.textContent = choice;
-        btn.onclick = () => selectAnswer(choice, currentData.answer);
+        btn.onclick = () => selectAnswer(choice, currentData.answer, currentData.explanation);
         choicesEl.appendChild(btn);
       });
     }
 
-    function selectAnswer(selected, correct) {
+    function selectAnswer(selected, correct, explanation) {
       if (selected === correct) {
         feedbackEl.textContent = "✅ 正解！";
         score++;
       } else {
         feedbackEl.textContent = `❌ 不正解！正解は「${correct}」です。`;
       }
+      explanationEl.innerHTML = explanation;
       nextBtn.classList.remove("hidden");
       Array.from(choicesEl.children).forEach(btn => btn.disabled = true);
     }
@@ -108,6 +118,7 @@
       questionEl.textContent = "クイズ終了！";
       choicesEl.innerHTML = "";
       feedbackEl.textContent = "";
+      explanationEl.innerHTML = "";
       nextBtn.classList.add("hidden");
       if (score === quizData.length) {
         resultEl.innerHTML = "🎉 全問正解おめでとう！<br><span class='coupon'>店内商品500円OFFクーポン</span>をゲット！";
@@ -121,3 +132,4 @@
   </script>
 </body>
 </html>
+v
