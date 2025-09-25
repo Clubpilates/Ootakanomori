@@ -2,134 +2,110 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ハロウィン課題発見クイズ 🎃</title>
+  <title>ピラティスクイズ</title>
   <style>
-    body { font-family: Arial, sans-serif; background-color: #1e1e2f; color: #fff; text-align: center; padding: 20px; }
-    h1 { color: #ff9800; }
-    .quiz-box { background: #2e2e4f; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); max-width: 700px; margin: auto; }
-    button { margin: 8px; padding: 10px 20px; border: none; border-radius: 8px; background: #ff5722; color: #fff; font-size: 16px; cursor: pointer; }
-    button:hover { background: #e64a19; }
-    .hidden { display: none; }
-    .coupon { font-size: 20px; color: #ffeb3b; margin-top: 20px; }
-    img { max-width: 100%; margin-top: 10px; border-radius: 8px; }
+    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+    .question { margin: 20px 0; }
+    .options button { display: block; margin: 5px auto; }
+    .explanation { margin: 15px; font-style: italic; color: #333; }
+    .result { font-weight: bold; margin: 20px; }
+    #retryBtn { display: none; margin-top: 20px; padding: 10px 20px; font-size: 16px; }
   </style>
 </head>
 <body>
-  <h1>🎃 ハロウィン課題発見クイズ 👻</h1>
-  <div class="quiz-box">
-    <p id="question"></p>
-    <div id="choices"></div>
-    <p id="feedback"></p>
-    <div id="explanation"></div>
-    <button id="next-btn" class="hidden">次の問題へ</button>
-    <div id="result" class="hidden"></div>
-  </div>
+  <h1>🎃 ピラティスクイズ 🎃</h1>
+  <div id="quiz"></div>
+  <div class="result" id="result"></div>
+  <button id="retryBtn" onclick="retryQuiz()">もう一度チャレンジ！</button>
 
   <script>
     const quizData = [
       {
         question: "足首のポイントとは？",
-        choices: ["足の甲を上げる動き", "足の指で指すように伸ばす動き", "かかとを押し出す動き", "足首を回す動き"],
-        answer: "足の指で指すように伸ばす動き",
-        explanation: "ポイントは「足の指でポインターのように指すからポイント」と覚える！<br/>その反対がフレックスです。"
+        options: ["つま先を伸ばす", "かかとを押し出す", "足首を固定する"],
+        answer: 0,
+        explanation: "ポイントは「足の指でポインターのように指すからポイント」と覚える！その反対がフレックス"
       },
       {
-        question: "頸椎、胸椎、腰椎、合わせて何個ある？",
-        choices: ["8個", "16個", "24個", "30個"],
-        answer: "24個",
-        explanation: "頸椎7個、胸椎12個、腰椎5個の合計24個。<br>ピラティスで扱うインナーマッスルは骨に近い筋肉のため、<br/>骨を動かすイメージが持てると体性感覚が向上します！"
+        question: "背骨は全部で何個ある？",
+        options: ["24個", "26個", "30個"],
+        answer: 0,
+        explanation: "頸椎7個、胸椎12個、腰椎5個の合計24個。ピラティスで扱うインナーマッスルは骨に近い筋肉のため、骨を動かすイメージが持てると体性感覚の向上します！"
       },
       {
         question: "仰向け状態で、骨盤インプリントの説明として正しいものはどれ？",
-        choices: ["腰椎を床に押し付ける", "腰椎を浮かせる", "骨盤を前に傾ける", "骨盤を左右にひねる"],
-        answer: "腰椎を床に押し付ける",
-        explanation: "骨盤の前傾後傾をスムーズに行えるようになると、より効果を実感できます！"
+        options: ["腰を床に押し付ける", "骨盤を立てる", "背骨を丸める"],
+        answer: 0,
+        explanation: "骨盤の前傾後傾をスムーズに行えるようになると、ピラティス上級者感が出ます！"
       },
       {
         question: "肩甲骨の挙上（きょじょう）とは？",
-        choices: ["肩甲骨を下げる動き", "肩甲骨を上に持ち上げる動き", "肩甲骨を内側に寄せる動き", "肩甲骨を外側に広げる動き"],
-        answer: "肩甲骨を上に持ち上げる動き",
-        explanation: "肩甲骨は6つの動きがあります。<br/>挙上、下制、内転、外転、上方回旋、下方回旋。詳しくはニュースレターをCHECK!"
+        options: ["肩をすくめる動き", "肩を下げる動き", "肩を前に出す動き"],
+        answer: 0,
+        explanation: "肩甲骨は6つの動きがあります。挙上、下制、内転、外転、上方回旋、下方回旋。詳しくはニュースレターをCHECK!"
       },
       {
-        question: "骨盤の骨の画像を見て、「腸骨」はどれ？<br><img src='pelvis.png' alt='骨盤の画像'>",
-        choices: ["仙骨", "腸骨", "坐骨", "恥骨"],
-        answer: "腸骨",
-        explanation: "詳しくは、ニュースレターをCHECK!<br><img src='pelvis.png' alt='骨盤の画像'>"
+        question: "骨盤の骨の画像を見て「腸骨」はどれ？",
+        options: ["上の大きな骨", "真ん中の三角の骨", "下の丸い骨"],
+        answer: 0,
+        explanation: "骨盤の画像で仙骨、腸骨、坐骨、尾骨、恥骨の位置を解説"
       }
     ];
 
-    let currentQuiz = 0;
+    let currentQuestion = 0;
     let score = 0;
 
-    const questionEl = document.getElementById("question");
-    const choicesEl = document.getElementById("choices");
-    const feedbackEl = document.getElementById("feedback");
-    const explanationEl = document.getElementById("explanation");
-    const nextBtn = document.getElementById("next-btn");
-    const resultEl = document.getElementById("result");
-
-    function shuffle(array) {
-      return array.sort(() => Math.random() - 0.5);
-    }
-
-    function loadQuiz() {
-      feedbackEl.textContent = "";
-      explanationEl.innerHTML = "";
-      nextBtn.classList.add("hidden");
-      const currentData = quizData[currentQuiz];
-      questionEl.textContent = `Q${currentQuiz + 1}. ${currentData.question}`;
-
-      // 選択肢をランダムに並べ替え
-      const shuffledChoices = shuffle([...currentData.choices]);
-
-      choicesEl.innerHTML = "";
-      shuffledChoices.forEach(choice => {
-        const btn = document.createElement("button");
-        btn.textContent = choice;
-        btn.onclick = () => selectAnswer(choice, currentData.answer, currentData.explanation);
-        choicesEl.appendChild(btn);
-      });
-    }
-
-    function selectAnswer(selected, correct, explanation) {
-      if (selected === correct) {
-        feedbackEl.textContent = "✅ 正解！";
-        score++;
-      } else {
-        feedbackEl.textContent = `❌ 不正解！正解は「${correct}」です。`;
-      }
-      explanationEl.innerHTML = explanation;
-      nextBtn.classList.remove("hidden");
-      Array.from(choicesEl.children).forEach(btn => btn.disabled = true);
-    }
-
-    nextBtn.onclick = () => {
-      currentQuiz++;
-      if (currentQuiz < quizData.length) {
-        loadQuiz();
+    function loadQuestion() {
+      const quiz = document.getElementById("quiz");
+      if (currentQuestion < quizData.length) {
+        const q = quizData[currentQuestion];
+        quiz.innerHTML = `
+          <div class="question"><h3>Q${currentQuestion + 1}. ${q.question}</h3></div>
+          <div class="options">
+            ${q.options.map((opt, i) => `<button onclick="checkAnswer(${i})">${opt}</button>`).join("")}
+          </div>
+        `;
       } else {
         showResult();
       }
     }
 
-    function showResult() {
-      questionEl.textContent = "クイズ終了！";
-      choicesEl.innerHTML = "";
-      feedbackEl.textContent = "";
-      explanationEl.innerHTML = "";
-      nextBtn.classList.add("hidden");
-      if (score === quizData.length) {
-        resultEl.innerHTML = "🎉 全問正解おめでとう！<br><span class='coupon'>店内商品500円OFFクーポン</span>をゲット！<br/>この画像をスクリーンショットして保存してください。<br/>画像を店頭でスタッフに提示することで割引適用となります。";
-      } else {
-        resultEl.textContent = `あなたの得点: ${score}/${quizData.length}問 正解`;
-      }
-      resultEl.classList.remove("hidden");
+    function checkAnswer(selected) {
+      const q = quizData[currentQuestion];
+      const quiz = document.getElementById("quiz");
+      const correct = selected === q.answer;
+      if (correct) score++;
+
+      quiz.innerHTML = `
+        <div class="question"><h3>Q${currentQuestion + 1}. ${q.question}</h3></div>
+        <p>${correct ? "⭕ 正解！" : "❌ 不正解！"}</p>
+        <p class="explanation">${q.explanation}</p>
+        <button onclick="nextQuestion()">次へ</button>
+      `;
     }
 
-    loadQuiz();
+    function nextQuestion() {
+      currentQuestion++;
+      loadQuestion();
+    }
+
+    function showResult() {
+      const result = document.getElementById("result");
+      result.innerHTML = `あなたの正解数は ${score} / ${quizData.length} です！`;
+      if (score < quizData.length) {
+        document.getElementById("retryBtn").style.display = "inline-block";
+      }
+    }
+
+    function retryQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("retryBtn").style.display = "none";
+      loadQuestion();
+    }
+
+    loadQuestion();
   </script>
 </body>
 </html>
-v
