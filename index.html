@@ -2,110 +2,166 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>ピラティスクイズ</title>
+  <title>ハロウィンピラティスクイズ</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
-    .question { margin: 20px 0; }
-    .options button { display: block; margin: 5px auto; }
-    .explanation { margin: 15px; font-style: italic; color: #333; }
-    .result { font-weight: bold; margin: 20px; }
-    #retryBtn { display: none; margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+    body {
+      font-family: "Comic Sans MS", "Arial", sans-serif;
+      text-align: center;
+      background: #fff8f0;
+      color: #333;
+    }
+    h1 {
+      color: #ff6b6b;
+      text-shadow: 2px 2px #ffe66d;
+    }
+    .quiz-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      position: relative;
+    }
+    .question {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 12px;
+      background: #ffb347;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .options button:hover {
+      background: #ff9234;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+    .explanation {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #666;
+    }
+    .retry-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background: #6c5ce7;
+      color: white;
+      cursor: pointer;
+      display: none;
+    }
+    .illustration {
+      width: 80px;
+      margin: 10px auto;
+    }
   </style>
 </head>
 <body>
-  <h1>🎃 ピラティスクイズ 🎃</h1>
-  <div id="quiz"></div>
-  <div class="result" id="result"></div>
-  <button id="retryBtn" onclick="retryQuiz()">もう一度チャレンジ！</button>
+  <h1>🎃 ハロウィンピラティスクイズ 👻</h1>
+  <div class="quiz-container">
+    <img src="https://cdn-icons-png.flaticon.com/512/4242/4242714.png" class="illustration" alt="Pumpkin">
+    <div id="quiz"></div>
+    <div id="result" class="result"></div>
+    <button id="retry" class="retry-btn" onclick="restartQuiz()">もう一度チャレンジ！</button>
+  </div>
 
   <script>
     const quizData = [
       {
         question: "足首のポイントとは？",
-        options: ["つま先を伸ばす", "かかとを押し出す", "足首を固定する"],
-        answer: 0,
-        explanation: "ポイントは「足の指でポインターのように指すからポイント」と覚える！その反対がフレックス"
+        options: ["足を止めること", "足を曲げること", "足の指でポインターのように指すこと", "足首を回すこと"],
+        answer: 2,
+        explanation: "ポイントは「足の指でポインターのように指すからポイント」と覚える！反対はフレックス。"
       },
       {
         question: "背骨は全部で何個ある？",
-        options: ["24個", "26個", "30個"],
-        answer: 0,
-        explanation: "頸椎7個、胸椎12個、腰椎5個の合計24個。ピラティスで扱うインナーマッスルは骨に近い筋肉のため、骨を動かすイメージが持てると体性感覚の向上します！"
+        options: ["12個", "24個", "26個", "30個"],
+        answer: 1,
+        explanation: "頸椎7個、胸椎12個、腰椎5個で合計24個。インナーマッスルを理解するには骨のイメージが大事！"
       },
       {
-        question: "仰向け状態で、骨盤インプリントの説明として正しいものはどれ？",
-        options: ["腰を床に押し付ける", "骨盤を立てる", "背骨を丸める"],
-        answer: 0,
-        explanation: "骨盤の前傾後傾をスムーズに行えるようになると、ピラティス上級者感が出ます！"
+        question: "仰向けでの骨盤インプリントの説明として正しいのは？",
+        options: ["背中を反らす", "骨盤を中立に保つ", "腰を床に近づける", "肩を上げる"],
+        answer: 2,
+        explanation: "骨盤の前傾後傾をスムーズに行えると、上級者感が出ます！"
       },
       {
-        question: "肩甲骨の挙上（きょじょう）とは？",
-        options: ["肩をすくめる動き", "肩を下げる動き", "肩を前に出す動き"],
+        question: "肩甲骨の挙上とは？",
+        options: ["肩をすくめる動き", "肩を下げる動き", "肩を後ろに引く動き", "肩を前に出す動き"],
         answer: 0,
-        explanation: "肩甲骨は6つの動きがあります。挙上、下制、内転、外転、上方回旋、下方回旋。詳しくはニュースレターをCHECK!"
+        explanation: "肩甲骨の6つの動きのひとつ。詳しくはニュースレターをCHECK！"
       },
       {
-        question: "骨盤の骨の画像を見て「腸骨」はどれ？",
-        options: ["上の大きな骨", "真ん中の三角の骨", "下の丸い骨"],
+        question: "骨盤の骨で「腸骨」はどれ？",
+        options: ["骨盤の上の大きな骨", "お尻の骨", "真ん中の骨", "前の骨"],
         answer: 0,
-        explanation: "骨盤の画像で仙骨、腸骨、坐骨、尾骨、恥骨の位置を解説"
+        explanation: "仙骨・腸骨・坐骨・尾骨・恥骨の位置を覚えると体理解が深まります！"
       }
     ];
 
-    let currentQuestion = 0;
+    let current = 0;
     let score = 0;
 
-    function loadQuestion() {
+    function loadQuiz() {
       const quiz = document.getElementById("quiz");
-      if (currentQuestion < quizData.length) {
-        const q = quizData[currentQuestion];
-        quiz.innerHTML = `
-          <div class="question"><h3>Q${currentQuestion + 1}. ${q.question}</h3></div>
-          <div class="options">
-            ${q.options.map((opt, i) => `<button onclick="checkAnswer(${i})">${opt}</button>`).join("")}
-          </div>
-        `;
-      } else {
-        showResult();
-      }
-    }
-
-    function checkAnswer(selected) {
-      const q = quizData[currentQuestion];
-      const quiz = document.getElementById("quiz");
-      const correct = selected === q.answer;
-      if (correct) score++;
-
       quiz.innerHTML = `
-        <div class="question"><h3>Q${currentQuestion + 1}. ${q.question}</h3></div>
-        <p>${correct ? "⭕ 正解！" : "❌ 不正解！"}</p>
-        <p class="explanation">${q.explanation}</p>
-        <button onclick="nextQuestion()">次へ</button>
+        <div class="question">${quizData[current].question}</div>
+        <div class="options">
+          ${quizData[current].options.map((opt, i) =>
+            `<button onclick="checkAnswer(${i})">${opt}</button>`).join("")}
+        </div>
       `;
     }
 
-    function nextQuestion() {
-      currentQuestion++;
-      loadQuestion();
-    }
-
-    function showResult() {
+    function checkAnswer(i) {
       const result = document.getElementById("result");
-      result.innerHTML = `あなたの正解数は ${score} / ${quizData.length} です！`;
-      if (score < quizData.length) {
-        document.getElementById("retryBtn").style.display = "inline-block";
+      if (i === quizData[current].answer) {
+        score++;
+        result.innerHTML = "✅ 正解！";
+      } else {
+        result.innerHTML = "❌ 不正解…";
+      }
+      result.innerHTML += `<div class="explanation">${quizData[current].explanation}</div>`;
+      current++;
+      if (current < quizData.length) {
+        setTimeout(() => {
+          result.innerHTML = "";
+          loadQuiz();
+        }, 2000);
+      } else {
+        setTimeout(showFinal, 2000);
       }
     }
 
-    function retryQuiz() {
-      currentQuestion = 0;
-      score = 0;
-      document.getElementById("result").innerHTML = "";
-      document.getElementById("retryBtn").style.display = "none";
-      loadQuestion();
+    function showFinal() {
+      const quiz = document.getElementById("quiz");
+      quiz.innerHTML = `<h2>終了！スコア: ${score}/${quizData.length}</h2>`;
+      if (score < quizData.length) {
+        document.getElementById("retry").style.display = "inline-block";
+      }
     }
 
-    loadQuestion();
+    function restartQuiz() {
+      current = 0;
+      score = 0;
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("retry").style.display = "none";
+      loadQuiz();
+    }
+
+    loadQuiz();
   </script>
 </body>
 </html>
