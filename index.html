@@ -146,22 +146,23 @@
     }
 
     function showFinal() {
-      const quiz = document.getElementById("quiz");
-      quiz.innerHTML = `<h2>終了！スコア: ${score}/${quizData.length}</h2>`;
-      if (score < quizData.length) {
-        document.getElementById("retry").style.display = "inline-block";
-      }
-    }
+  const quiz = document.getElementById("quiz");
+  // 共通でボタンを追加
+  const restartButtonHTML = `<button class="retry-btn" onclick="restartQuiz()" style="display:inline-block;">最初に戻る</button>`;
 
-    function restartQuiz() {
-      current = 0;
-      score = 0;
-      document.getElementById("result").innerHTML = "";
-      document.getElementById("retry").style.display = "none";
-      loadQuiz();
-    }
-
-    loadQuiz();
-  </script>
-</body>
-</html>
+  if (score === quizData.length) {
+    // 全問正解の場合
+    quiz.innerHTML = `
+      <h2>🎉 全問正解おめでとうございます！！ 🎉</h2>
+      <p>店内商品500円OFFクーポン獲得しました！</p>
+      <p>この画面をスクリーンショットして保存ください。<br>利用時は保存したスクリーンショットの画像を店頭でスタッフに提示してください。</p>
+      ${restartButtonHTML}
+    `;
+  } else {
+    // 全問正解でない場合
+    quiz.innerHTML = `
+      <h2>終了！スコア: ${score}/${quizData.length}</h2>
+      ${restartButtonHTML}
+    `;
+  }
+}
