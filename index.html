@@ -60,7 +60,6 @@
       background: #6c5ce7;
       color: white;
       cursor: pointer;
-      display: none;
     }
     .illustration {
       width: 80px;
@@ -74,7 +73,6 @@
     <img src="https://cdn-icons-png.flaticon.com/512/4242/4242714.png" class="illustration" alt="Pumpkin">
     <div id="quiz"></div>
     <div id="result" class="result"></div>
-    <button id="retry" class="retry-btn" onclick="restartQuiz()">もう一度チャレンジ！</button>
   </div>
 
   <script>
@@ -101,8 +99,7 @@
         question: "肩甲骨の挙上とは？",
         options: ["肩をすくめる動き", "肩を下げる動き", "肩を後ろに引く動き", "肩を前に出す動き"],
         answer: 0,
-        explanation: "肩甲骨の6つの動きのひとつ。詳しくはニュースレターをCHECK！
-         style="max-width:100%; margin-top:10px; border-radius:12px;">"
+        explanation: "肩甲骨の6つの動きのひとつ。詳しくはニュースレターをCHECK！<br><img src='https://cdn-icons-png.flaticon.com/512/4242/4242714.png' style='max-width:100%; margin-top:10px; border-radius:12px;'>"
       },
       {
         question: "ASIS(上前腸骨棘)の説明として正しいものはどれ？",
@@ -147,23 +144,32 @@
     }
 
     function showFinal() {
-  const quiz = document.getElementById("quiz");
-  // 共通でボタンを追加
-  const restartButtonHTML = `<button class="retry-btn" onclick="restartQuiz()" style="display:inline-block;">最初に戻る</button>`;
+      const quiz = document.getElementById("quiz");
+      const restartButtonHTML = `<button class="retry-btn" onclick="restartQuiz()">最初に戻る</button>`;
+      if (score === quizData.length) {
+        quiz.innerHTML = `
+          <h2>🎉 全問正解おめでとうございます！！ 🎉</h2>
+          <p>店内商品500円OFFクーポン獲得しました！</p>
+          <p>この画面をスクリーンショットして保存ください。<br>利用時は保存したスクリーンショットの画像を店頭でスタッフに提示してください。</p>
+          ${restartButtonHTML}
+        `;
+      } else {
+        quiz.innerHTML = `
+          <h2>終了！スコア: ${score}/${quizData.length}</h2>
+          ${restartButtonHTML}
+        `;
+      }
+    }
 
-  if (score === quizData.length) {
-    // 全問正解の場合
-    quiz.innerHTML = `
-      <h2>🎉 全問正解おめでとうございます！！ 🎉</h2>
-      <p>店内商品500円OFFクーポン獲得しました！</p>
-      <p>この画面をスクリーンショットして保存ください。<br>利用時は保存したスクリーンショットの画像を店頭でスタッフに提示してください。</p>
-      ${restartButtonHTML}
-    `;
-  } else {
-    // 全問正解でない場合
-    quiz.innerHTML = `
-      <h2>終了！スコア: ${score}/${quizData.length}</h2>
-      ${restartButtonHTML}
-    `;
-  }
-}
+    function restartQuiz() {
+      current = 0;
+      score = 0;
+      document.getElementById("result").innerHTML = "";
+      loadQuiz();
+    }
+
+    // 最初のクイズを読み込み
+    loadQuiz();
+  </script>
+</body>
+</html>
