@@ -43,16 +43,18 @@
     .options button:hover {
       background: #ff9234;
     }
+    .options button.correct {
+      background: #4CAF50;
+    }
+    .options button.wrong {
+      background: #f44336;
+    }
     .result {
       margin-top: 20px;
-      font-size: 1.2em;
+      font-size: 1.1em;
+      color: #333;
     }
-    .explanation {
-      margin-top: 10px;
-      font-size: 0.9em;
-      color: #666;
-    }
-    .retry-btn {
+    .next-btn {
       margin-top: 20px;
       padding: 10px 20px;
       border: none;
@@ -61,115 +63,109 @@
       color: white;
       cursor: pointer;
     }
-    .illustration {
-      width: 80px;
-      margin: 10px auto;
-    }
   </style>
 </head>
 <body>
   <h1>🎃 ハロウィンピラティスクイズ 👻</h1>
   <div class="quiz-container">
-    <img src="https://cdn-icons-png.flaticon.com/512/4242/4242714.png" class="illustration" alt="Pumpkin">
     <div id="quiz"></div>
     <div id="result" class="result"></div>
+    <button id="nextBtn" class="next-btn" style="display:none;" onclick="nextQuestion()">次へ ▶</button>
   </div>
 
   <script>
     const quizData = [
       {
-        question: "足首のポイントとは？",
-        options: ["足を止めること", "足を曲げること", "足の指でポインターのように指すこと", "足首を回すこと"],
-        answer: 2,
-        explanation: "ポイントは「足の指でポインターのように指すからポイント」と覚える！反対はフレックス。"
-      },
-      {
-        question: "頸椎、胸椎、腰椎合わせて全部で何個ある？",
-        options: ["12個", "24個", "8個", "32個"],
-        answer: 1,
-        explanation: "頸椎7個、胸椎12個、腰椎5個で合計24個。インナーマッスルを理解するには骨のイメージが大事！"
-      },
-      {
-        question: "仰向けでの骨盤インプリントの説明として正しいのは？",
-        options: ["背中を反らす", "骨盤を中立に保つ", "腰を床に近づける", "肩を上げる"],
-        answer: 2,
-        explanation: "骨盤の前傾後傾をスムーズに行えると、ピラティスの効果をより実感できます！"
-      },
-      {
-        question: "肩甲骨の挙上とは？",
-        options: ["肩をすくめる動き", "肩を下げる動き", "肩を後ろに引く動き", "肩を前に出す動き"],
+        question: "ASISの説明として正しいものはどれ？",
+        options: [
+          "左右の寛骨の最も前方にある突起",
+          "背骨の一部で腰椎の突起",
+          "膝関節の外側にある突起",
+          "肩甲骨の先端部分"
+        ],
         answer: 0,
-        explanation: "肩甲骨の6つの動きのひとつ。詳しくはニュースレターをCHECK！<br><img src='https://cdn-icons-png.flaticon.com/512/4242/4242714.png' style='max-width:100%; margin-top:10px; border-radius:12px;'>"
+        explanation: "骨盤前側の左右の出っ張り=ASIS(上前腸骨棘)"
       },
       {
-        question: "ASIS(上前腸骨棘)の説明として正しいものはどれ？",
-        options: ["座った時に刺さる左右のお尻の骨", "骨盤前側の左右の出っ張り", "腰の後ろの左右の出っ張り", "股関節の出っ張り"],
-        answer: 1,
-        explanation: "骨盤前側の左右の出っ張り=ASIS(上前腸骨棘)<br>座った時に刺さる左右のお尻の骨＝坐骨<br>腰の後ろの左右の出っ張り=PSIS(上後腸骨棘)<br>股関節の出っ張り=恥骨"
+        question: "骨盤の前傾とは？",
+        options: [
+          "腰が丸まって背中が後ろに倒れる動き",
+          "骨盤が左右に傾く動き",
+          "骨盤が前に倒れて腰が反るような動き",
+          "骨盤が上下にスライドする動き"
+        ],
+        answer: 2,
+        explanation: "骨盤が前に倒れると腰が反る姿勢になります"
+      },
+      {
+        question: "BOSUとは何に使う道具？",
+        options: [
+          "バランストレーニングや体幹強化",
+          "呼吸法の練習",
+          "肩関節の固定",
+          "ストレッチポールの別名"
+        ],
+        answer: 0,
+        explanation: "BOSUは不安定な面で体幹やバランスを鍛える器具です"
       }
     ];
 
     let current = 0;
-    let score = 0;
+    let selected = null;
 
-    function loadQuiz() {
+    function loadQuestion() {
       const quiz = document.getElementById("quiz");
-      quiz.innerHTML = `
-        <div class="question">${quizData[current].question}</div>
-        <div class="options">
-          ${quizData[current].options.map((opt, i) =>
-            `<button onclick="checkAnswer(${i})">${opt}</button>`).join("")}
-        </div>
-      `;
-    }
-
-    function checkAnswer(i) {
       const result = document.getElementById("result");
-      if (i === quizData[current].answer) {
-        score++;
-        result.innerHTML = "✅ 正解！";
+      const nextBtn = document.getElementById("nextBtn");
+      result.innerHTML = "";
+      nextBtn.style.display = "none";
+      selected = null;
+
+      const q = quizData[current];
+      quiz.innerHTML = `<div class="question">${q.question}</div>
+        <div class="options">
+          ${q.options.map((opt,i) => `<button onclick="selectAnswer(${i}, this)">${opt}</button>`).join('')}
+        </div>`;
+    }
+
+    function selectAnswer(index, btn) {
+      if (selected !== null) return; // すでに選択済みなら無視
+      selected = index;
+      const q = quizData[current];
+      const buttons = document.querySelectorAll(".options button");
+
+      buttons.forEach((b,i) => {
+        b.disabled = true;
+        if (i === q.answer) {
+          b.classList.add("correct");
+        } else if (i === selected) {
+          b.classList.add("wrong");
+        }
+      });
+
+      const result = document.getElementById("result");
+      if (index === q.answer) {
+        result.innerHTML = "✅ 正解！<br>" + q.explanation;
       } else {
-        result.innerHTML = "❌ 不正解…";
+        result.innerHTML = "❌ 不正解…<br>" + q.explanation;
       }
-      result.innerHTML += `<div class="explanation">${quizData[current].explanation}</div>`;
+
+      // 次へボタン表示
+      if (current < quizData.length - 1) {
+        document.getElementById("nextBtn").style.display = "inline-block";
+      } else {
+        // 最後の問題なら「終了メッセージ」
+        result.innerHTML += "<br>🎉 クイズ終了！お疲れさまでした 🎉";
+      }
+    }
+
+    function nextQuestion() {
       current++;
-      if (current < quizData.length) {
-        setTimeout(() => {
-          result.innerHTML = "";
-          loadQuiz();
-        }, 2000);
-      } else {
-        setTimeout(showFinal, 2000);
-      }
+      loadQuestion();
     }
 
-    function showFinal() {
-      const quiz = document.getElementById("quiz");
-      const restartButtonHTML = `<button class="retry-btn" onclick="restartQuiz()">最初に戻る</button>`;
-      if (score === quizData.length) {
-        quiz.innerHTML = `
-          <h2>🎉 全問正解おめでとうございます！！ 🎉</h2>
-          <p>店内商品500円OFFクーポン獲得しました！</p>
-          <p>この画面をスクリーンショットして保存ください。<br>利用時は保存したスクリーンショットの画像を店頭でスタッフに提示してください。</p>
-          ${restartButtonHTML}
-        `;
-      } else {
-        quiz.innerHTML = `
-          <h2>終了！スコア: ${score}/${quizData.length}</h2>
-          ${restartButtonHTML}
-        `;
-      }
-    }
-
-    function restartQuiz() {
-      current = 0;
-      score = 0;
-      document.getElementById("result").innerHTML = "";
-      loadQuiz();
-    }
-
-    // 最初のクイズを読み込み
-    loadQuiz();
+    // 最初の問題を表示
+    loadQuestion();
   </script>
 </body>
 </html>
