@@ -54,7 +54,7 @@
       font-size: 1.1em;
       color: #333;
     }
-    .next-btn {
+    .next-btn, .retry-btn {
       margin-top: 20px;
       padding: 10px 20px;
       border: none;
@@ -75,7 +75,7 @@
 
   <script>
     const quizData = [
-    {
+      {
         question: "足首のポイントとは？",
         options: ["足を止めること", "足を曲げること", "足の指でポインターのように指すこと", "足首を回すこと"],
         answer: 2,
@@ -97,17 +97,13 @@
       },
       {
         question: "仰向けでの骨盤インプリントの説明として正しいのは？",
-        options: [
-          "背中を反らす", "骨盤を中立に保つ", "腰を床に近づける", "肩を上げる"
-        ],
+        options: ["背中を反らす", "骨盤を中立に保つ", "腰を床に近づける", "肩を上げる"],
         answer: 2,
         explanation: "骨盤の前傾後傾をスムーズに行えると、ピラティスの効果をより実感できます！"
       },
       {
         question: "肩甲骨の挙上とは？",
-        options: [
-          "肩をすくめる動き", "肩を下げる動き", "肩を後ろに引く動き", "肩を前に出す動き"
-        ],
+        options: ["肩をすくめる動き", "肩を下げる動き", "肩を後ろに引く動き", "肩を前に出す動き"],
         answer: 0,
         explanation: "肩甲骨の6つの動きのひとつ。詳しくは店頭でお配りしているニュースレターをCHECK！"
       }
@@ -115,6 +111,7 @@
 
     let current = 0;
     let selected = null;
+    let score = 0;
 
     function loadQuestion() {
       const quiz = document.getElementById("quiz");
@@ -149,11 +146,25 @@
       const result = document.getElementById("result");
       if (index === q.answer) {
         result.innerHTML = "✅ 正解！<br>" + q.explanation;
+        score++;
       } else {
         result.innerHTML = "❌ 不正解…<br>" + q.explanation;
       }
 
-   function showFinal() {
+      // 次へボタン or 終了画面
+      if (current < quizData.length - 1) {
+        document.getElementById("nextBtn").style.display = "inline-block";
+      } else {
+        setTimeout(showFinal, 1000);
+      }
+    }
+
+    function nextQuestion() {
+      current++;
+      loadQuestion();
+    }
+
+    function showFinal() {
       const quiz = document.getElementById("quiz");
       const restartButtonHTML = `<button class="retry-btn" onclick="restartQuiz()">最初に戻る</button>`;
       if (score === quizData.length) {
@@ -175,11 +186,11 @@
       current = 0;
       score = 0;
       document.getElementById("result").innerHTML = "";
-      loadQuiz();
+      loadQuestion();
     }
 
     // 最初のクイズを読み込み
-    loadQuiz();
+    loadQuestion();
   </script>
 </body>
 </html>
