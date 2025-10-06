@@ -165,6 +165,7 @@
     }
 
     function showFinal() {
+      explanation.style.display = "none"; 
       const quiz = document.getElementById("quiz");
       const restartButtonHTML = `<button class="retry-btn" onclick="restartQuiz()">最初に戻る</button>`;
       if (score === quizData.length) {
