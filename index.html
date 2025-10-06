@@ -9,10 +9,14 @@
       text-align: center;
       background: #fff8f0;
       color: #333;
+      margin: 0;
+      padding: 0;
     }
     h1 {
       color: #ff6b6b;
       text-shadow: 2px 2px #ffe66d;
+      padding: 10px;
+      font-size: 1.6em;
     }
     .quiz-container {
       max-width: 600px;
@@ -21,22 +25,22 @@
       padding: 20px;
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      position: relative;
     }
     .question {
       font-size: 1.2em;
       margin-bottom: 20px;
+      line-height: 1.4;
     }
     .options button {
       display: block;
       width: 100%;
-      padding: 10px;
-      margin: 8px 0;
+      padding: 14px;
+      margin: 10px 0;
       border: none;
       border-radius: 12px;
       background: #ffb347;
       color: white;
-      font-size: 1em;
+      font-size: 1.1em;
       cursor: pointer;
       transition: 0.3s;
     }
@@ -56,12 +60,39 @@
     }
     .next-btn, .retry-btn {
       margin-top: 20px;
-      padding: 10px 20px;
+      padding: 14px 24px;
       border: none;
-      border-radius: 20px;
+      border-radius: 25px;
       background: #6c5ce7;
       color: white;
+      font-size: 1.1em;
       cursor: pointer;
+      width: 100%;
+    }
+    .next-btn:hover, .retry-btn:hover {
+      background: #5a4bd6;
+    }
+
+    /* スマホ最適化 */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.3em;
+      }
+      .quiz-container {
+        padding: 15px;
+        border-radius: 15px;
+      }
+      .question {
+        font-size: 1.1em;
+      }
+      .options button {
+        font-size: 1em;
+        padding: 12px;
+      }
+      .next-btn, .retry-btn {
+        font-size: 1em;
+        padding: 12px;
+      }
     }
   </style>
 </head>
@@ -118,6 +149,7 @@
       const result = document.getElementById("result");
       const nextBtn = document.getElementById("nextBtn");
       result.innerHTML = "";
+      result.style.display = "block"; 
       nextBtn.style.display = "none";
       selected = null;
 
@@ -129,7 +161,7 @@
     }
 
     function selectAnswer(index, btn) {
-      if (selected !== null) return; // すでに選択済みなら無視
+      if (selected !== null) return;
       selected = index;
       const q = quizData[current];
       const buttons = document.querySelectorAll(".options button");
@@ -151,11 +183,10 @@
         result.innerHTML = "❌ 不正解…<br>" + q.explanation;
       }
 
-      // 次へボタン or 終了画面
       if (current < quizData.length - 1) {
         document.getElementById("nextBtn").style.display = "inline-block";
       } else {
-        setTimeout(showFinal, 1000);
+        setTimeout(showFinal, 1200);
       }
     }
 
@@ -165,7 +196,6 @@
     }
 
     function showFinal() {
-      // ★ 修正ポイント: explanation の代わりに result を非表示にする
       document.getElementById("result").style.display = "none";  
 
       const quiz = document.getElementById("quiz");
@@ -174,12 +204,13 @@
         quiz.innerHTML = `
           <h2>🎉 全問正解おめでとうございます！！ 🎉</h2>
           <p>店内商品500円OFFクーポン獲得しました！</p>
-          <p>この画面をスクリーンショットして保存ください。<br>利用時は保存したスクリーンショットの画像を店頭でスタッフに提示してください。</p>
+          <p>この画面をスクリーンショットして保存し、店頭でスタッフに提示してください。</p>
           ${restartButtonHTML}
         `;
       } else {
         quiz.innerHTML = `
-          <h2>終了！スコア: ${score}/${quizData.length}</h2><br>"全問正解でクーポン獲得できます！もう一度挑戦！"
+          <h2>終了！スコア: ${score}/${quizData.length}</h2>
+          <p>全問正解でクーポン獲得できます！もう一度挑戦！</p>
           ${restartButtonHTML}
         `;
       }
@@ -189,12 +220,11 @@
       current = 0;
       score = 0;
       const result = document.getElementById("result");
-      result.style.display = "block"; // ← 再スタート時に表示を戻す
+      result.style.display = "block";
       result.innerHTML = "";
       loadQuestion();
     }
 
-    // 最初のクイズを読み込み
     loadQuestion();
   </script>
 </body>
