@@ -75,16 +75,25 @@
 
   <script>
     const quizData = [
+    {
+        question: "足首のポイントとは？",
+        options: ["足を止めること", "足を曲げること", "足の指でポインターのように指すこと", "足首を回すこと"],
+        answer: 2,
+        explanation: "ポイントは「足の指でポインターのように指すからポイント」と覚える！反対はフレックス。"
+      },
+      {
+        question: "頸椎、胸椎、腰椎合わせて全部で何個ある？",
+        options: ["12個", "24個", "8個", "32個"],
+        answer: 1,
+        explanation: "頸椎7個、胸椎12個、腰椎5個で合計24個。インナーマッスルを理解するには骨のイメージが大事！"
+      }, 
       {
         question: "ASISの説明として正しいものはどれ？",
         options: [
-          "左右の寛骨の最も前方にある突起",
-          "背骨の一部で腰椎の突起",
-          "膝関節の外側にある突起",
-          "肩甲骨の先端部分"
+          "座った時に刺さる左右のお尻の骨", "骨盤前側の左右の出っ張り", "腰の後ろの左右の出っ張り", "恥骨の出っ張り"
         ],
-        answer: 0,
-        explanation: "骨盤前側の左右の出っ張り=ASIS(上前腸骨棘)"
+        answer: 1,
+        explanation: "骨盤前側の左右の出っ張り=ASIS(上前腸骨棘)<br>店頭でお配りしている「覚えておきたいピラティス用語集」をCHECK!"
       },
       {
         question: "仰向けでの骨盤インプリントの説明として正しいのは？",
@@ -100,7 +109,7 @@
           "肩をすくめる動き", "肩を下げる動き", "肩を後ろに引く動き", "肩を前に出す動き"
         ],
         answer: 0,
-        explanation: "肩甲骨の6つの動きのひとつ。詳しくはニュースレターをCHECK！"
+        explanation: "肩甲骨の6つの動きのひとつ。詳しくは店頭でお配りしているニュースレターをCHECK！"
       }
     ];
 
@@ -144,22 +153,33 @@
         result.innerHTML = "❌ 不正解…<br>" + q.explanation;
       }
 
-      // 次へボタン表示
-      if (current < quizData.length - 1) {
-        document.getElementById("nextBtn").style.display = "inline-block";
+   function showFinal() {
+      const quiz = document.getElementById("quiz");
+      const restartButtonHTML = `<button class="retry-btn" onclick="restartQuiz()">最初に戻る</button>`;
+      if (score === quizData.length) {
+        quiz.innerHTML = `
+          <h2>🎉 全問正解おめでとうございます！！ 🎉</h2>
+          <p>店内商品500円OFFクーポン獲得しました！</p>
+          <p>この画面をスクリーンショットして保存ください。<br>利用時は保存したスクリーンショットの画像を店頭でスタッフに提示してください。</p>
+          ${restartButtonHTML}
+        `;
       } else {
-        // 最後の問題なら「終了メッセージ」
-        result.innerHTML += "<br>🎉 クイズ終了！お疲れさまでした 🎉";
+        quiz.innerHTML = `
+          <h2>終了！スコア: ${score}/${quizData.length}</h2>
+          ${restartButtonHTML}
+        `;
       }
     }
 
-    function nextQuestion() {
-      current++;
-      loadQuestion();
+    function restartQuiz() {
+      current = 0;
+      score = 0;
+      document.getElementById("result").innerHTML = "";
+      loadQuiz();
     }
 
-    // 最初の問題を表示
-    loadQuestion();
+    // 最初のクイズを読み込み
+    loadQuiz();
   </script>
 </body>
 </html>
