@@ -165,7 +165,9 @@
     }
 
     function showFinal() {
-      explanation.style.display = "none"; 
+      // ★ 修正ポイント: explanation の代わりに result を非表示にする
+      document.getElementById("result").style.display = "none";  
+
       const quiz = document.getElementById("quiz");
       const restartButtonHTML = `<button class="retry-btn" onclick="restartQuiz()">最初に戻る</button>`;
       if (score === quizData.length) {
@@ -186,7 +188,9 @@
     function restartQuiz() {
       current = 0;
       score = 0;
-      document.getElementById("result").innerHTML = "";
+      const result = document.getElementById("result");
+      result.style.display = "block"; // ← 再スタート時に表示を戻す
+      result.innerHTML = "";
       loadQuestion();
     }
 
