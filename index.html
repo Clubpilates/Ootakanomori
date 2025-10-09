@@ -15,8 +15,9 @@
     h1 {
       color: #ff6b6b;
       text-shadow: 2px 2px #ffe66d;
-      padding: 10px;
-      font-size: 1.6em;
+      padding: 12px;
+      font-size: 1.8em;
+      line-height: 1.4;
     }
     .quiz-container {
       max-width: 600px;
@@ -27,20 +28,21 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     .question {
-      font-size: 1.2em;
-      margin-bottom: 20px;
-      line-height: 1.4;
+      font-size: 1.3em;
+      margin-bottom: 25px;
+      line-height: 1.6;
     }
     .options button {
       display: block;
       width: 100%;
-      padding: 14px;
-      margin: 10px 0;
+      min-height: 60px; /* 押しやすさを確保 */
+      padding: 16px;
+      margin: 12px 0;
       border: none;
-      border-radius: 12px;
+      border-radius: 14px;
       background: #ffb347;
       color: white;
-      font-size: 1.1em;
+      font-size: 1.2em;
       cursor: pointer;
       transition: 0.3s;
     }
@@ -55,19 +57,21 @@
     }
     .result {
       margin-top: 20px;
-      font-size: 1.1em;
+      font-size: 1.2em;
+      line-height: 1.6;
       color: #333;
     }
     .next-btn, .retry-btn {
       margin-top: 20px;
-      padding: 14px 24px;
+      padding: 16px 24px;
       border: none;
       border-radius: 25px;
       background: #6c5ce7;
       color: white;
-      font-size: 1.1em;
+      font-size: 1.2em;
       cursor: pointer;
       width: 100%;
+      min-height: 55px;
     }
     .next-btn:hover, .retry-btn:hover {
       background: #5a4bd6;
@@ -76,22 +80,22 @@
     /* スマホ最適化 */
     @media (max-width: 480px) {
       h1 {
-        font-size: 1.3em;
+        font-size: 1.5em;
       }
       .quiz-container {
         padding: 15px;
         border-radius: 15px;
       }
       .question {
-        font-size: 1.1em;
+        font-size: 1.2em;
       }
       .options button {
-        font-size: 1em;
-        padding: 12px;
+        font-size: 1.1em;
+        padding: 14px;
       }
       .next-btn, .retry-btn {
-        font-size: 1em;
-        padding: 12px;
+        font-size: 1.1em;
+        padding: 14px;
       }
     }
   </style>
