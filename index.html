@@ -11,38 +11,40 @@
       color: #333;
       margin: 0;
       padding: 0;
+      font-size: 1.8em; /* ←全体の文字サイズをUP */
+      line-height: 1.6;
     }
     h1 {
       color: #ff6b6b;
       text-shadow: 2px 2px #ffe66d;
       padding: 12px;
-      font-size: 1.8em;
+      font-size: 3em; /* ←タイトルも大きく */
       line-height: 1.4;
     }
     .quiz-container {
-      max-width: 600px;
+      max-width: 700px;
       margin: auto;
       background: #fff;
-      padding: 20px;
+      padding: 30px;
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     .question {
-      font-size: 1.3em;
+      font-size: 1.6em; /* ←問題文も拡大 */
       margin-bottom: 25px;
-      line-height: 1.6;
+      line-height: 1.8;
     }
     .options button {
       display: block;
       width: 100%;
-      min-height: 60px; /* 押しやすさを確保 */
-      padding: 16px;
-      margin: 12px 0;
+      min-height: 90px; /* 押しやすさUP */
+      padding: 24px;
+      margin: 16px 0;
       border: none;
       border-radius: 14px;
       background: #ffb347;
       color: white;
-      font-size: 1.2em;
+      font-size: 1.4em; /* ←ボタン文字拡大 */
       cursor: pointer;
       transition: 0.3s;
     }
@@ -57,21 +59,21 @@
     }
     .result {
       margin-top: 20px;
-      font-size: 1.2em;
-      line-height: 1.6;
+      font-size: 1.4em; /* ←結果表示も拡大 */
+      line-height: 1.8;
       color: #333;
     }
     .next-btn, .retry-btn {
       margin-top: 20px;
-      padding: 16px 24px;
+      padding: 20px 24px;
       border: none;
       border-radius: 25px;
       background: #6c5ce7;
       color: white;
-      font-size: 1.2em;
+      font-size: 1.4em; /* ←次へボタンも拡大 */
       cursor: pointer;
       width: 100%;
-      min-height: 55px;
+      min-height: 70px;
     }
     .next-btn:hover, .retry-btn:hover {
       background: #5a4bd6;
@@ -79,23 +81,22 @@
 
     /* スマホ最適化 */
     @media (max-width: 480px) {
-      h1 {
-        font-size: 1.5em;
+      body {
+        font-size: 1.4em;
       }
-      .quiz-container {
-        padding: 15px;
-        border-radius: 15px;
+      h1 {
+        font-size: 2.2em;
       }
       .question {
-        font-size: 1.2em;
+        font-size: 1.4em;
       }
       .options button {
-        font-size: 1.1em;
-        padding: 14px;
+        font-size: 1.2em;
+        padding: 18px;
       }
       .next-btn, .retry-btn {
-        font-size: 1.1em;
-        padding: 14px;
+        font-size: 1.2em;
+        padding: 18px;
       }
     }
   </style>
@@ -201,7 +202,6 @@
 
     function showFinal() {
       document.getElementById("result").style.display = "none";  
-
       const quiz = document.getElementById("quiz");
       const restartButtonHTML = `<button class="retry-btn" onclick="restartQuiz()">最初に戻る</button>`;
       if (score === quizData.length) {
