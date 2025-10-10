@@ -11,40 +11,40 @@
       color: #333;
       margin: 0;
       padding: 0;
-      font-size: 1.8em; /* ←全体の文字サイズをUP */
-      line-height: 1.6;
+      font-size: 3.6em; /* ←前回の2倍 */
+      line-height: 1.8;
     }
     h1 {
       color: #ff6b6b;
-      text-shadow: 2px 2px #ffe66d;
-      padding: 12px;
-      font-size: 3em; /* ←タイトルも大きく */
+      text-shadow: 4px 4px #ffe66d;
+      padding: 24px;
+      font-size: 6em; /* ←タイトルもさらに2倍 */
       line-height: 1.4;
     }
     .quiz-container {
-      max-width: 700px;
+      max-width: 90%;
       margin: auto;
       background: #fff;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      padding: 60px;
+      border-radius: 40px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
     }
     .question {
-      font-size: 1.6em; /* ←問題文も拡大 */
-      margin-bottom: 25px;
+      font-size: 3.2em; /* ←問題文もさらに2倍 */
+      margin-bottom: 40px;
       line-height: 1.8;
     }
     .options button {
       display: block;
       width: 100%;
-      min-height: 90px; /* 押しやすさUP */
-      padding: 24px;
-      margin: 16px 0;
+      min-height: 180px; /* ←押しやすさ2倍 */
+      padding: 48px;
+      margin: 30px 0;
       border: none;
-      border-radius: 14px;
+      border-radius: 28px;
       background: #ffb347;
       color: white;
-      font-size: 1.4em; /* ←ボタン文字拡大 */
+      font-size: 2.8em; /* ←ボタン文字も倍 */
       cursor: pointer;
       transition: 0.3s;
     }
@@ -58,22 +58,22 @@
       background: #f44336;
     }
     .result {
-      margin-top: 20px;
-      font-size: 1.4em; /* ←結果表示も拡大 */
+      margin-top: 40px;
+      font-size: 2.8em; /* ←結果も大きく */
       line-height: 1.8;
       color: #333;
     }
     .next-btn, .retry-btn {
-      margin-top: 20px;
-      padding: 20px 24px;
+      margin-top: 40px;
+      padding: 40px 48px;
       border: none;
-      border-radius: 25px;
+      border-radius: 50px;
       background: #6c5ce7;
       color: white;
-      font-size: 1.4em; /* ←次へボタンも拡大 */
+      font-size: 2.8em; /* ←ボタン文字拡大 */
       cursor: pointer;
       width: 100%;
-      min-height: 70px;
+      min-height: 140px;
     }
     .next-btn:hover, .retry-btn:hover {
       background: #5a4bd6;
@@ -82,21 +82,27 @@
     /* スマホ最適化 */
     @media (max-width: 480px) {
       body {
-        font-size: 1.4em;
-      }
-      h1 {
         font-size: 2.2em;
       }
+      h1 {
+        font-size: 4em;
+      }
+      .quiz-container {
+        padding: 30px;
+        border-radius: 25px;
+      }
       .question {
-        font-size: 1.4em;
+        font-size: 2.2em;
       }
       .options button {
-        font-size: 1.2em;
-        padding: 18px;
+        font-size: 2em;
+        padding: 24px;
+        min-height: 120px;
       }
       .next-btn, .retry-btn {
-        font-size: 1.2em;
-        padding: 18px;
+        font-size: 2em;
+        padding: 28px;
+        min-height: 100px;
       }
     }
   </style>
